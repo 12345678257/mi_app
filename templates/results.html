@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resultados Médicos - IPS GOLEMAN</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>Resultados Médicos</h2>
+    {% if files %}
+      <ul class="list-group">
+        {% for file in files %}
+          <li class="list-group-item">
+            {{ file }} <a href="{{ url_for('download_result', filename=file) }}" class="btn btn-sm btn-success float-end">Descargar</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No hay resultados disponibles.</p>
+    {% endif %}
+    <a href="{{ url_for('dashboard') }}" class="btn btn-info mt-3">Volver al Dashboard</a>
+  </div>
+</body>
+</html>

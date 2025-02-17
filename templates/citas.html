@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar Citas - IPS GOLEMAN</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script>
+      // Lista de médicos por especialidad
+      const medicosPorEspecialidad = {
+          "Medicina General": ["Dr. Juan Pérez", "Dra. Ana García"],
+          "Nutrición": ["Lic. Laura Martínez", "Lic. José Ramírez"],
+          "Psicología": ["Dr. Miguel Sánchez", "Dra. Laura Fernández"],
+          "Terapia Física": ["Fisioterapeuta Pedro Díaz", "Fisioterapeuta Marta López"],
+          "Terapia Ocupacional": ["Terapeuta Carla Torres", "Terapeuta Roberto Ruiz"]
+      };
+
+      // Actualiza la lista de médicos según la especialidad seleccionada
+      function actualizarMedicos(index) {
+          const especialidadSelect = document.getElementById("especialidad" + index);
+          const medicoSelect = document.getElementById("medico" + index);
+          const especialidad = especialidadSelect.value;
+          medicoSelect.innerHTML = "";
+          if (medicosPorEspecialidad[especialidad]) {
+              medicosPorEspecialidad[especialidad].forEach(function(medico) {
+                  const option = document.createElement("option");
+                  option.value = medico;
+                  option.textContent = medico;
+                  medicoSelect.appendChild(option);
+              });
+          }
+      }
+
+      // Agrega un nuevo bloque de campos para una cita
+      function agregarCita() {
+          const container = document.getElementById("citas-container");
+          const index = container.children.length + 1;
+          const html = `
+            <div class="cita mb-3">
+                <label for="especialidad${index}" class="form-label">Especialidad</label>
+                <select class="form-control" id="especialidad${index}" name="especialidad" onchange="actualizarMedicos(${index})" required>
+                    <option value="Medicina General">Medicina General</option>
+                    <option value="Nutrición">Nutrición</option>
+                    <option value="Psicología">Psicología</option>
+                    <option value="Terapia Física">Terapia Física</option>
+                    <option value="Terapia Ocupacional">Terapia Ocupacional</option>
+                </select>
+                <label for="medico${index}" class="form-label">Médico</label>
+                <select class="form-control" id="medico${index}" name="medico" required></select>
+                <label for="fecha${index}" class="form-label">Fecha</label>
+                <input type="date" class="form-control" id="fecha${index}" name="fecha" required>
+                <label for="hora${index}" class="form-label">Hora</label>
+                <input type="time" class="form-control" id="hora${index}" name="hora" required>
+            </div>
+          `;
+          const div = document.createElement("div");
+          div.innerHTML = html;
+          container.appendChild(div);
+          actualizarMedicos(index);
+      }
+
+      window.onload = function() {
+          // Inicializar el primer bloque
+          actualizarMedicos(1);
+      };
+  </script>
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>Agendar Citas</h2>
+    <form method="POST" action="{{ url_for('citas') }}">
+      <div id="citas-container">
+          <div class="cita mb-3">
+              <label for="especialidad1" class="form-label">Especialidad</label>
+              <select class="form-control" id="especialidad1" name="especialidad" onchange="actualizarMedicos(1)" required>
+                  <option value="Medicina General">Medicina General</option>
+                  <option value="Nutrición">Nutrición</option>
+                  <option value="Psicología">Psicología</option>
+                  <option value="Terapia Física">Terapia Física</option>
+                  <option value="Terapia Ocupacional">Terapia Ocupacional</option>
+              </select>
+              <label for="medico1" class="form-label">Médico</label>
+              <select class="form-control" id="medico1" name="medico" required></select>
+              <label for="fecha1" class="form-label">Fecha</label>
+              <input type="date" class="form-control" id="fecha1" name="fecha" required>
+              <label for="hora1" class="form-label">Hora</label>
+              <input type="time" class="form-control" id="hora1" name="hora" required>
+          </div>
+      </div>
+      <button type="button" class="btn btn-secondary" onclick="agregarCita()">Agregar otra cita</button>
+      <button type="submit" class="btn btn-primary w-100 mt-3">Agendar Citas</button>
+    </form>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-info mt-3">Volver al Dashboard</a>
+  </div>
+</body>
+</html>
